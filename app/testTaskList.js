@@ -1,39 +1,15 @@
-let arr = [
-  {
-    message: "Make PB&J Sandwitch",
-    subTasks: [
-      {
-        message: "Add Peanut Butter to bread",
-        subTasks: null,
-        status: false
-      },
-      {
-        message: "Add Jelly to bread",
-        subTasks: null,
-        status: false
-      },
-      {
-        message: "put two slice of bread together",
-        subTasks: null,
-        status: false
-      }
-    ]
-  },
-  {
-    message: "Go Grocery Shopping",
-    subTasks: null,
-    status: false
-  },
-  {
-    message: "Go Exercise",
-    subTasks: null,
-    status: false
-  },
-  {
-    message: "Do Yard Work",
-    subTasks: null,
-    status: false
-  }
-];
+const Task = require("./Task.js");
+
+let arr = [];
+
+let subTasksArr =[];
+
+subTasksArr.push(new Task("Apply Peanut Butter to bread slice", null));
+subTasksArr.push(new Task("Apply Jelly to bread slice", null));
+subTasksArr.push(new Task("Put Bread slices together", null));
+
+arr.push(new Task("Make PB&J Sandwich", subTasksArr));
+arr.push(new Task("Wash the Car", null, true));
+arr.push(new Task("Do the Laundry", null));
 
 module.exports = arr;

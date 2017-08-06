@@ -61,8 +61,8 @@ function displayTasklist() {
   for (let i=0; i < tasklist.length; i++) {
     console.log(tasklist[i].formattedTaskMessage());
       if (tasklist[i].subTasks !== null && Array.isArray(tasklist[i].subTasks)) {
-        for (let j=0; j < tasklist[i].subTask[j].length; j++) {
-          console.log("   " + tasklist[i].subTask[j].formattedTaskMessage());
+        for (let j=0; j < tasklist[i].subTasks.length; j++) {
+          console.log("    " + tasklist[i].subTasks[j].formattedTaskMessage());
         }
       }
   }
