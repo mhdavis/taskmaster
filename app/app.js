@@ -1,6 +1,7 @@
 const inquirer = require("inquirer");
 const colors = require("colors");
 const fs = require("fs");
+const Task = require("./app/task.js");
 
 let tasklist = [];
 
@@ -57,5 +58,6 @@ function addTask() {
   ]).then(function (answers) {
     let task = new Task(answers.task, []);
     tasklist.push(task);
+    console.log(task);
   });
 }
