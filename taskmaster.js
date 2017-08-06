@@ -1,15 +1,17 @@
 const inquirer = require("inquirer");
 const colors = require("colors");
 const fs = require("fs");
-const Task = require("./app/task.js");
+const Task = require("./app/Task.js");
 
-let tasklist = [];
+let tasklist = require("./app/testTaskList.js");
+
+startApp();
 
 function startApp() {
     inquirer.prompt([
       {
         name: "method",
-        input: "list",
+        type: "list",
         choices: [
           "Display Tasklist",
           "Add Task",
@@ -46,6 +48,24 @@ function startApp() {
           break;
       }
     });
+}
+
+function displayTasklist() {
+  console.log(
+    "\n" +
+    "+----------+\n" +
+    "| TASKLIST |\n" +
+    "+----------+\n"
+  );
+
+  for (let i=0; i < tasklist.length; i++) {
+    console.log(tasklist[i].formattedTaskMessage());
+      if (tasklist[i].subTasks !== null && Array.isArray(tasklist[i].subTasks)) {
+        for (let j=0; j < tasklist[i].subTask[j].length; j++) {
+          console.log("   " + tasklist[i].subTask[j].formattedTaskMessage());
+        }
+      }
+  }
 }
 
 function addTask() {
