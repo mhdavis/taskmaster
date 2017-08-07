@@ -137,6 +137,49 @@ function addSubTask(tasklist) {
   });
 }
 
+function removeSubTask(tasklist) {
+  // generates inquirer selections
+  let removeSubTaskSelections = [];
+  for (let i=0; i < tasklist.length; i++) {
+    if (Array.isArray(tasklist[i].subTasks)) {
+      removeSubTaskSelections.push(tasklist[i].message);
+    }
+  }
+
+  inquirer.prompt([
+    {
+      name: "selection",
+      type: "list",
+      choices: removeSubTaskSelections,
+      message: "Select a parent task:"
+    }
+  ]).then(function (answers) {
+    for (let i=0; i < tasklist.length; i++) {
+      if (tasklist[i].message === answers.selection) {
+        if (tasklist[i].subTasks !== null && Array.isArray(tasklist[i].subTasks)) {
+          let subTaskDeletionSelections = generateOptions(tasklist[i].subTasks);
+
+          inquirer.prompt([
+            {
+              name: "subtask_for_deletion",
+              type: "list",
+              choices: subTaskDeletionSelections,
+              message: "Select Subtask for deletion:"
+            }
+          ]).then(function(inner_answers) {
+            for (let j=0; j < tasklist[i].subTasks.length; j++) {
+              if (tasklist[i].subTasks[j].message === inner_answers.subtask_for_deletion) {
+                tasklist[i].subTasks.splice(j, 1);
+              }
+            }
+            promptContinue();
+          });
+        }
+      }
+    }
+  });
+}
+
 function generateOptions(arr) {
   let selections = [];
   for (let i=0; i < arr.length; i++) {
