@@ -85,10 +85,7 @@ function addTask(tasklist) {
 }
 
 function removeTask(tasklist) {
-  let removeTaskSelections = [];
-  for (let i=0; i < tasklist.length; i++) {
-    removeTaskSelections.push(tasklist[i].message);
-  }
+  let removeTaskSelections = generateOptions(tasklist);
 
   inquirer.prompt([
     {
@@ -106,6 +103,48 @@ function removeTask(tasklist) {
     promptContinue();
   });
 
+}
+
+function addSubTask(tasklist) {
+  let addSubTaskSelections = generateOptions(tasklist);
+
+  inquirer.prompt([
+    {
+      name: "selection",
+      type: "list",
+      choices: addSubTaskSelections,
+      message: "Select which parent task you'd like to add to:"
+    },
+    {
+      name: "subtask_to_add",
+      type: "input",
+      message: "Enter a subtask:"
+    }
+  ]).then(function (answers) {
+    for(let i=0; i < tasklist.length; i++) {
+      if (tasklist[i].message === answers.selection) {
+        if (tasklist[i].subTasks === null) {
+          tasklist[i].subTasks = [];
+          let subTask = new Task(answers.subtask_to_add, null);
+          tasklist[i].subTasks.push(subTask);
+        } else if (Array.isArray(tasklist[i].subTasks)) {
+          let subTask = new Task(answers.subtask_to_add, null);
+          tasklist[i].subTasks.push(subTask);
+        }
+      }
+    }
+    promptContinue();
+  });
+}
+
+function generateOptions(arr) {
+  let selections = [];
+  for (let i=0; i < arr.length; i++) {
+    if (arr[i].hasOwnProperty("message")) {
+      selections.push(arr[i].message);
+    }
+  }
+  return selections;
 }
 
 function promptContinue() {
