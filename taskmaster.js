@@ -3,7 +3,7 @@ const colors = require("colors");
 const fs = require("fs");
 const Task = require("./app/Task.js");
 
-let tasklist = require("./app/testTaskList.js");
+let myTasklist = require("./app/testTaskList.js");
 
 startApp();
 
@@ -26,31 +26,31 @@ function startApp() {
     ]).then(function (answers) {
       switch (answers.method) {
         case "Display Tasklist":
-          displayTasklist();
+          displayTasklist(myTasklist);
           break;
         case "Add Task":
-          addTask();
+          addTask(myTasklist);
           break;
         case "Remove Task":
-          removeTask();
+          removeTask(myTasklist);
           break;
         case "Add Sub-Task":
-          addSubTask();
+          addSubTask(myTasklist);
           break;
         case "Remove Sub-Task":
-          removeSubTask();
+          removeSubTask(myTasklist);
           break;
         case "Change Task Status":
-          changeTask();
+          changeTask(myTasklist);
           break;
         case "Change Sub-Task Status":
-          changeSubTask();
+          changeSubTask(myTasklist);
           break;
       }
     });
 }
 
-function displayTasklist() {
+function displayTasklist(tasklist) {
   console.log(
     "\n" +
     "+----------+\n" +
@@ -66,18 +66,58 @@ function displayTasklist() {
         }
       }
   }
+  console.log('');
+  promptContinue();
 }
 
-function addTask() {
+function addTask(tasklist) {
   inquirer.prompt([
     {
-      name: "task",
+      name: "task_to_add",
       type: "input",
-      message: "Enter task:"
+      message: "Enter a task:"
     }
   ]).then(function (answers) {
-    let task = new Task(answers.task, []);
+    let task = new Task(answers.task_to_add, null);
     tasklist.push(task);
-    console.log(task);
+    promptContinue();
+  });
+}
+
+function removeTask(tasklist) {
+  let removeTaskSelections = [];
+  for (let i=0; i < tasklist.length; i++) {
+    removeTaskSelections.push(tasklist[i].message);
+  }
+
+  inquirer.prompt([
+    {
+      name: "task_to_delete",
+      type: "list",
+      choices: removeTaskSelections,
+      message: "Select which task to delete:"
+    }
+  ]).then(function (answers) {
+    for (let i=0; i < tasklist.length; i++) {
+      if (tasklist[i].message === answers.task_to_delete) {
+        tasklist.splice(i, 1);
+      }
+    }
+    promptContinue();
+  });
+
+}
+
+function promptContinue() {
+  inquirer.prompt([
+    {
+      name: "continue",
+      type: "confirm",
+      message: "Return to Options?"
+    }
+  ]).then(function (answers) {
+    if (answers.continue) {
+      startApp();
+    }
   });
 }
