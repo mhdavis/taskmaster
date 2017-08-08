@@ -85,7 +85,7 @@ function addTask(tasklist) {
 }
 
 function removeTask(tasklist) {
-  let removeTaskSelections = generateOptions(tasklist);
+  let removeTaskSelections = generateOptions(tasklist, "message");
 
   inquirer.prompt([
     {
@@ -106,7 +106,7 @@ function removeTask(tasklist) {
 }
 
 function addSubTask(tasklist) {
-  let addSubTaskSelections = generateOptions(tasklist);
+  let addSubTaskSelections = generateOptions(tasklist, "message");
 
   inquirer.prompt([
     {
@@ -124,10 +124,13 @@ function addSubTask(tasklist) {
     for(let i=0; i < tasklist.length; i++) {
       if (tasklist[i].message === answers.selection) {
         if (tasklist[i].subTasks === null) {
+
           tasklist[i].subTasks = [];
           let subTask = new Task(answers.subtask_to_add, null);
           tasklist[i].subTasks.push(subTask);
+
         } else if (Array.isArray(tasklist[i].subTasks)) {
+
           let subTask = new Task(answers.subtask_to_add, null);
           tasklist[i].subTasks.push(subTask);
         }
@@ -138,55 +141,80 @@ function addSubTask(tasklist) {
 }
 
 function removeSubTask(tasklist) {
-  // generates inquirer selections
-  let removeSubTaskSelections = [];
-  for (let i=0; i < tasklist.length; i++) {
-    if (Array.isArray(tasklist[i].subTasks)) {
-      removeSubTaskSelections.push(tasklist[i].message);
-    }
+  let rstFiltered = tasklist.filter(function (obj) {
+    return Array.isArray(obj.subTasks);
+  });
+
+  let rstSelections = [];
+  for (let i=0; i < rstFiltered.length; i++) {
+    let str = rstFiltered[i].message
+    rstSelections.push(str);
   }
 
   inquirer.prompt([
     {
       name: "selection",
       type: "list",
-      choices: removeSubTaskSelections,
+      choices: rstSelections,
       message: "Select a parent task:"
     }
   ]).then(function (answers) {
-    for (let i=0; i < tasklist.length; i++) {
-      if (tasklist[i].message === answers.selection) {
-        if (tasklist[i].subTasks !== null && Array.isArray(tasklist[i].subTasks)) {
-          let subTaskDeletionSelections = generateOptions(tasklist[i].subTasks);
+    for (let i=0; i < rstFiltered.length; i++) {
+      if (rstFiltered[i].message === answers.selection) {
 
-          inquirer.prompt([
-            {
-              name: "subtask_for_deletion",
-              type: "list",
-              choices: subTaskDeletionSelections,
-              message: "Select Subtask for deletion:"
-            }
-          ]).then(function(inner_answers) {
-            for (let j=0; j < tasklist[i].subTasks.length; j++) {
-              if (tasklist[i].subTasks[j].message === inner_answers.subtask_for_deletion) {
-                tasklist[i].subTasks.splice(j, 1);
-              }
-            }
-            promptContinue();
-          });
+        let stDeletions = [];
+
+        for (let j=0; j < rstFiltered[i].subTasks.length; j++) {
+          stDeletions.push(rstFiltered[i].subTasks[j].message);
         }
+
+        inquirer.prompt([
+          {
+            name: "subtask_for_deletion",
+            type: "list",
+            choices: stDeletions,
+            message: "Select Subtask for deletion:"
+          }
+        ]).then(function(inner_answers) {
+          for (let j=0; j < tasklist[i].subTasks.length; j++) {
+            if (tasklist[i].subTasks[j].message === inner_answers.subtask_for_deletion) {
+              tasklist[i].subTasks.splice(j, 1);
+            }
+          }
+          promptContinue();
+        });
       }
     }
   });
 }
 
-function generateOptions(arr) {
-  let selections = [];
-  for (let i=0; i < arr.length; i++) {
-    if (arr[i].hasOwnProperty("message")) {
-      selections.push(arr[i].message);
+function changeTask(tasklist) {
+  let changeTaskSelections = generateOptions(tasklist);
+
+  inquirer.prompt([
+    {
+      name: "task_for_status_change",
+      type: "list",
+      choices: changeTaskSelections,
+      message: "Mark task as complete/incomplete:"
     }
+  ]).then(function (answers) {
+    for (let i=0; i < tasklist.length; i++) {
+      //if ()
+    }
+  });
+}
+
+function generateOptions (arr, prop) {
+  let filtered = arr.filter(function (obj) {
+    return obj.hasOwnProperty(prop);
+  });
+
+  let selections = [];
+  for (let i=0; i < filtered.length; i++) {
+    selections.push(filtered.prop);
   }
+
   return selections;
 }
 
