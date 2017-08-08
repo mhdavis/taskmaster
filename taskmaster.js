@@ -60,11 +60,11 @@ function displayTasklist(tasklist) {
 
   for (let i=0; i < tasklist.length; i++) {
     console.log(tasklist[i].formattedTaskMessage());
-      if (tasklist[i].subTasks !== null && Array.isArray(tasklist[i].subTasks)) {
-        for (let j=0; j < tasklist[i].subTasks.length; j++) {
-          console.log("    " + tasklist[i].subTasks[j].formattedTaskMessage());
-        }
+    if (tasklist[i].subTasks !== null && Array.isArray(tasklist[i].subTasks)) {
+      for (let j=0; j < tasklist[i].subTasks.length; j++) {
+        console.log("    " + tasklist[i].subTasks[j].formattedTaskMessage());
       }
+    }
   }
   console.log('');
   promptContinue();
@@ -86,7 +86,6 @@ function addTask(tasklist) {
 
 function removeTask(tasklist) {
   let removeTaskSelections = generateOptions(tasklist, "message");
-
   inquirer.prompt([
     {
       name: "task_to_delete",
@@ -145,11 +144,7 @@ function removeSubTask(tasklist) {
     return Array.isArray(obj.subTasks);
   });
 
-  let rstSelections = [];
-  for (let i=0; i < rstFiltered.length; i++) {
-    let str = rstFiltered[i].message
-    rstSelections.push(str);
-  }
+  let rstSelections = generateOptions(rstFiltered, "message");
 
   inquirer.prompt([
     {
@@ -162,11 +157,7 @@ function removeSubTask(tasklist) {
     for (let i=0; i < rstFiltered.length; i++) {
       if (rstFiltered[i].message === answers.selection) {
 
-        let stDeletions = [];
-
-        for (let j=0; j < rstFiltered[i].subTasks.length; j++) {
-          stDeletions.push(rstFiltered[i].subTasks[j].message);
-        }
+        let stDeletions = generateOptions(rstFiltered[i].subTasks, "message");
 
         inquirer.prompt([
           {
@@ -212,7 +203,7 @@ function generateOptions (arr, prop) {
 
   let selections = [];
   for (let i=0; i < filtered.length; i++) {
-    selections.push(filtered.prop);
+    selections.push(filtered[i][prop]);
   }
 
   return selections;
