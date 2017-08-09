@@ -19,7 +19,8 @@ function startApp() {
           "Add Sub-Task",
           "Remove Sub-Task",
           "Change Task Status",
-          "Change Sub-Task Status"
+          "Change Sub-Task Status",
+          "Export Tasklist as Text File"
         ],
         message: "OPTIONS:"
       }
@@ -46,6 +47,8 @@ function startApp() {
         case "Change Sub-Task Status":
           changeSubTask(myTasklist);
           break;
+        case "Export Tasklist as Text File":
+          exportAsTxtFile(myTasklist, "myTasklist.txt");
       }
     });
 }
@@ -239,6 +242,42 @@ function changeSubTask(tasklist) {
     }
   });
 }
+
+function exportAsTxtFile(tasklist, filename) {
+  fs.writeFile(filename, "", "utf8", (err) => {if (err) throw err});
+  fs.writeFile(filename ,
+  "+----------+\n" +
+  "| TASKLIST |\n" +
+  "+----------+\n" +
+  "\n",
+  "utf8", (err) => {if (err) throw err;});
+
+  let str = '';
+
+
+  for (let i=0; i < tasklist.length; i++) {
+    if (tasklist[i].status) {
+      str += "[X] - " + tasklist[i].message + "\n";
+    } else {
+      str += tasklist[i].display + "\n";
+    }
+    if (Array.isArray(tasklist[i].subTasks)) {
+      for (let j=0; j < tasklist[i].subTasks.length; j++) {
+        if (tasklist[i].subTasks[j].status) {
+          str += "     [X] - " + tasklist[i].subTasks[j].message + "\n";
+        } else {
+          str += "     " + tasklist[i].subTasks[j].display + "\n";
+        }
+      }
+    }
+  }
+
+  fs.appendFile(filename, str, "utf8", function (err) {
+    if (err) throw err;
+  });
+  promptContinue();
+}
+
 
 function generateOptions (arr, prop) {
   let filtered = arr.filter(function (obj) {
