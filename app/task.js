@@ -21,6 +21,9 @@ Task.prototype.toggleStatus = function () {
       this.subTasks[i].formattedDisplay();
     }
   }
+  // if subtasks is an Array
+  // if all subtasks status are true
+  // mark parent status as complete
 };
 
 module.exports = Task;

@@ -148,14 +148,14 @@ function removeSubTask(tasklist) {
 
   inquirer.prompt([
     {
-      name: "selection",
+      name: "parent_task",
       type: "list",
       choices: rstSelections,
       message: "Select a parent task:"
     }
   ]).then(function (answers) {
     for (let i=0; i < rstFiltered.length; i++) {
-      if (rstFiltered[i].message === answers.selection) {
+      if (rstFiltered[i].message === answers.parent_task) {
 
         let stDeletions = generateOptions(rstFiltered[i].subTasks, "message");
 
@@ -196,6 +196,47 @@ function changeTask(tasklist) {
       }
     }
     promptContinue();
+  });
+}
+
+function changeSubTask(tasklist) {
+  let cstFiltered = tasklist.filter(function (obj) {
+      return Array.isArray(obj.subTasks);
+  });
+
+  let cstSelections = generateOptions(cstFiltered, "message");
+
+  inquirer.prompt([
+    {
+      name: "parent_task",
+      type: "list",
+      choices: cstSelections,
+      message: "select a parent task:"
+    }
+  ]).then(function (answers) {
+    for (let i=0; i < cstFiltered.length; i++) {
+      if (cstFiltered[i].message === answers.parent_task) {
+
+        let stToggles = generateOptions(cstFiltered[i].subTasks, "display");
+
+        inquirer.prompt([
+          {
+            name: "subtask_for_status_change",
+            type: "list",
+            choices: stToggles,
+            message: "Mark subtask as complete/incomplete"
+          }
+        ]).then(function (inner_answers) {
+          for (let j=0; j < tasklist[i].subTasks.length; j++) {
+            if (tasklist[i].subTasks[j].display === inner_answers.subtask_for_status_change) {
+              tasklist[i].subTasks[j].toggleStatus();
+              console.log(tasklist[i].subTasks[j].status);
+            }
+          }
+          promptContinue();
+        });
+      }
+    }
   });
 }
 
