@@ -59,10 +59,10 @@ function displayTasklist(tasklist) {
   );
 
   for (let i=0; i < tasklist.length; i++) {
-    console.log(tasklist[i].formattedTaskMessage());
+    console.log(tasklist[i].display + "\n");
     if (tasklist[i].subTasks !== null && Array.isArray(tasklist[i].subTasks)) {
       for (let j=0; j < tasklist[i].subTasks.length; j++) {
-        console.log("    " + tasklist[i].subTasks[j].formattedTaskMessage());
+        console.log("    " + tasklist[i].subTasks[j].display  + "\n");
       }
     }
   }
@@ -180,7 +180,7 @@ function removeSubTask(tasklist) {
 }
 
 function changeTask(tasklist) {
-  let changeTaskSelections = generateOptions(tasklist);
+  let changeTaskSelections = generateOptions(tasklist, "display");
 
   inquirer.prompt([
     {
@@ -191,8 +191,11 @@ function changeTask(tasklist) {
     }
   ]).then(function (answers) {
     for (let i=0; i < tasklist.length; i++) {
-      //if ()
+      if (tasklist[i].display === answers.task_for_status_change) {
+        tasklist[i].toggleStatus();
+      }
     }
+    promptContinue();
   });
 }
 
