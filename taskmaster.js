@@ -20,7 +20,8 @@ function startApp() {
           "Remove Sub-Task",
           "Change Task Status",
           "Change Sub-Task Status",
-          "Export Tasklist as Text File"
+          "Export Tasklist as Text File",
+          "Import Tasklist from Text File"
         ],
         message: "OPTIONS:"
       }
@@ -49,6 +50,8 @@ function startApp() {
           break;
         case "Export Tasklist as Text File":
           exportAsTxtFile(myTasklist, "myTasklist.txt");
+        case "Import Tasklist from Text File":
+          importTxtFile("myTasklist.txt");
       }
     });
 }
@@ -278,6 +281,35 @@ function exportAsTxtFile(tasklist, filename) {
   promptContinue();
 }
 
+function importTxtFile(filename) {
+    myTasklist = [];
+    fs.readFile(filename, 'utf8', function (err, data) {
+      if (err) {
+        console.log(
+          "\nError: The file specified does NOT match the format\n" +
+          "interpreted by Taskmaster\n"
+      );
+    } else {
+      let dataArr = data.split("\n");
+      let dataSliced = dataArr.slice(4, dataArr.length-1);
+      console.log(dataSliced);
+      console.log("=======================");
+      let temp = {};
+      for (let i=0; i < dataSliced.length; i++) {
+        if (dataSliced[i].startsWith("[ ]")) {
+          let taskMsgIncomplete = dataSliced[i].slice(5, dataSliced[i].length);
+          console.log(taskMsgIncomplete);
+        } else if (dataSliced[i].startsWith("[X]")) {
+          let taskMsgComplete = dataSliced[i].slice(5, dataSliced[i].length);
+          console.log(taskMsgComplete);
+        }
+        // Stuck: having trouble figuring out the best way to parse text file
+      }
+
+    }
+
+    });
+}
 
 function generateOptions (arr, prop) {
   let filtered = arr.filter(function (obj) {
