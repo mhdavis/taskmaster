@@ -1,6 +1,7 @@
 const inquirer = require("inquirer");
 const colors = require("colors");
 const fs = require("fs");
+const readline = require("readline");
 const Task = require("./app/Task.js");
 
 let myTasklist = require("./app/testTaskList.js");
@@ -51,7 +52,7 @@ function startApp() {
         case "Export Tasklist as Text File":
           exportAsTxtFile(myTasklist, "myTasklist.txt");
         case "Import Tasklist from Text File":
-          importTxtFile("myTasklist.txt");
+          importTxtFile("myTasklist.txt", myTasklist);
       }
     });
 }
@@ -282,33 +283,53 @@ function exportAsTxtFile(tasklist, filename) {
 }
 
 function importTxtFile(filename) {
-    myTasklist = [];
-    fs.readFile(filename, 'utf8', function (err, data) {
-      if (err) {
-        console.log(
-          "\nError: The file specified does NOT match the format\n" +
-          "interpreted by Taskmaster\n"
-      );
-    } else {
-      let dataArr = data.split("\n");
-      let dataSliced = dataArr.slice(4, dataArr.length-1);
-      console.log(dataSliced);
-      console.log("=======================");
-      let temp = {};
-      for (let i=0; i < dataSliced.length; i++) {
-        if (dataSliced[i].startsWith("[ ]")) {
-          let taskMsgIncomplete = dataSliced[i].slice(5, dataSliced[i].length);
-          console.log(taskMsgIncomplete);
-        } else if (dataSliced[i].startsWith("[X]")) {
-          let taskMsgComplete = dataSliced[i].slice(5, dataSliced[i].length);
-          console.log(taskMsgComplete);
-        }
-        // Stuck: having trouble figuring out the best way to parse text file
+
+  let taskArray = [];
+
+  const rl = readline.createInterface({
+    input: fs.createReadStream(filename)
+  });
+
+
+  rl.on('line', function(line) {
+    if (line.startsWith("[ ]")) {
+
+      let splt = line.split("[ ] - ");
+      let task = new Task(splt[1], null);
+      console.log(task);
+      taskArray.push(task);
+
+    } else if (line.startsWith("[X]")) {
+
+      let splt = line.split("[X] - ");
+      let task = new Task(splt[1], null, true);
+      console.log(task);
+      taskArray.push(task);
+
+    } else if (/\s{3,}\[\s\]/.test(line)) {
+
+      let splt = line.split("[ ] - ");
+      let subtask = new Task(splt[1], null);
+      console.log(subtask);
+      if (taskArray[taskArray.length-1].subTasks === null) {
+        taskArray[taskArray.length-1].subTasks = [];
       }
+      taskArray[taskArray.length-1].subTasks.push(subtask);
+
+    } else if (/\s{3,}\[\w\]/.test(line)) {
+
+      let splt = line.split("[X] - ");
+      let subtask = new Task(splt[1], null, true);
+      console.log(subtask);
+      if (taskArray[taskArray.length-1].subTasks === null) {
+        taskArray[taskArray.length-1].subTasks = [];
+      }
+      taskArray[taskArray.length-1].subTasks.push(subtask);
 
     }
+  });
+  console.log(taskArray);
 
-    });
 }
 
 function generateOptions (arr, prop) {
