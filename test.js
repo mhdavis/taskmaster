@@ -5,7 +5,7 @@ const Task = require("./app/Task.js");
 let banana = importTxtFile("myTasklist.txt");
 
 function importTxtFile(filename) {
-  
+
   let importFilePromise = new Promise(function (resolve, reject) {
 
     let taskArray = [];
@@ -46,13 +46,20 @@ function importTxtFile(filename) {
         taskArray[taskArray.length-1].subTasks.push(subtask);
       }
 
-      resolve(taskArray);
+    });
+
+    rl.on('close', function () {
+      if (taskArray.length >0) {
+        resolve(taskArray);
+      } else {
+        reject("Could Not Read File");
+      }
     });
 
   });
 
   importFilePromise.then(function(res) {
-    console.log(res);
+    myTaskList = res;
   }).catch(function (err) {
     console.log(err);
   });

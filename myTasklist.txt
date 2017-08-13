@@ -3,7 +3,7 @@
 +----------+
 
 [ ] - Make PB&J Sandwich
-     [ ] - Apply Peanut Butter to bread slice
+     [X] - Apply Peanut Butter to bread slice
      [ ] - Apply Jelly to bread slice
      [ ] - Put Bread slices together
 [X] - Wash the Car

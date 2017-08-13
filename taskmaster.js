@@ -4,7 +4,7 @@ const fs = require("fs");
 const readline = require("readline");
 const Task = require("./app/Task.js");
 
-let myTasklist = require("./app/testTaskList.js");
+let myTasklist = [];
 
 startApp();
 
@@ -277,58 +277,84 @@ function exportAsTxtFile(tasklist, filename) {
   }
 
   fs.appendFile(filename, str, "utf8", function (err) {
-    if (err) throw err;
+    if (err) {
+      throw err;
+    } else {
+      console.log(`SUCCESS: Exported File to: ${filename}`);
+    }
   });
   promptContinue();
 }
 
 function importTxtFile(filename) {
+  let readFilePromise = importFilePromise(filename);
 
-  let taskArray = [];
-
-  const rl = readline.createInterface({
-    input: fs.createReadStream(filename)
+  readFilePromise.then(function (fulfilled) {
+    console.log("SUCESS: Import Text File Successful!");
+    myTasklist = fulfilled;
+    promptContinue();
+  }, function(err) {
+    console.log("Error! Promise returned rejected");
+    if (err) throw err;
+    promptContinue();
   });
 
+}
 
-  rl.on('line', function(line) {
-    if (line.startsWith("[ ]")) {
 
-      let splt = line.split("[ ] - ");
-      let task = new Task(splt[1], null);
-      console.log(task);
-      taskArray.push(task);
+function importFilePromise(filename) {
 
-    } else if (line.startsWith("[X]")) {
+  return new Promise (function (resolve, reject) {
 
-      let splt = line.split("[X] - ");
-      let task = new Task(splt[1], null, true);
-      console.log(task);
-      taskArray.push(task);
+    let taskArray = [];
 
-    } else if (/\s{3,}\[\s\]/.test(line)) {
+    const rl = readline.createInterface({
+      input: fs.createReadStream(filename)
+    });
 
-      let splt = line.split("[ ] - ");
-      let subtask = new Task(splt[1], null);
-      console.log(subtask);
-      if (taskArray[taskArray.length-1].subTasks === null) {
-        taskArray[taskArray.length-1].subTasks = [];
+    rl.on('line', function(line) {
+      if (line.startsWith("[ ]")) {
+
+        let splt = line.split("[ ] - ");
+        let task = new Task(splt[1], null);
+        taskArray.push(task);
+
+      } else if (line.startsWith("[X]")) {
+
+        let splt = line.split("[X] - ");
+        let task = new Task(splt[1], null, true);
+        taskArray.push(task);
+
+      } else if (/\s{3,}\[\s\]/.test(line)) {
+
+        let splt = line.split("[ ] - ");
+        let subtask = new Task(splt[1], null);
+        if (taskArray[taskArray.length-1].subTasks === null) {
+          taskArray[taskArray.length-1].subTasks = [];
+        }
+        taskArray[taskArray.length-1].subTasks.push(subtask);
+
+      } else if (/\s{3,}\[\w\]/.test(line)) {
+
+        let splt = line.split("[X] - ");
+        let subtask = new Task(splt[1], null, true);
+        if (taskArray[taskArray.length-1].subTasks === null) {
+          taskArray[taskArray.length-1].subTasks = [];
+        }
+        taskArray[taskArray.length-1].subTasks.push(subtask);
       }
-      taskArray[taskArray.length-1].subTasks.push(subtask);
 
-    } else if (/\s{3,}\[\w\]/.test(line)) {
+    });
 
-      let splt = line.split("[X] - ");
-      let subtask = new Task(splt[1], null, true);
-      console.log(subtask);
-      if (taskArray[taskArray.length-1].subTasks === null) {
-        taskArray[taskArray.length-1].subTasks = [];
+    rl.on('close', function () {
+      if (taskArray.length > 0) {
+        resolve(taskArray);
+      } else {
+        reject("Error: Unable to Parse File. Please make sure to\n structure imported tasklist properly.");
       }
-      taskArray[taskArray.length-1].subTasks.push(subtask);
+    });
 
-    }
   });
-  console.log(taskArray);
 
 }
 
@@ -355,6 +381,8 @@ function promptContinue() {
   ]).then(function (answers) {
     if (answers.continue) {
       startApp();
+    } else {
+      console.log("~~~ Thank you for using Taskmaster! ~~~");
     }
   });
 }
