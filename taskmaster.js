@@ -2,13 +2,13 @@ const inquirer = require("inquirer");
 const colors = require("colors");
 const fs = require("fs");
 const readline = require("readline");
-const Task = require("./app/Task.js");
+const Task = require("./model/Task.js");
 
 let myTasklist = [];
 
-startApp();
+runApplication();
 
-function startApp() {
+function runApplication() {
     inquirer.prompt([
       {
         name: "method",
@@ -44,15 +44,17 @@ function startApp() {
           removeSubTask(myTasklist);
           break;
         case "Change Task Status":
-          changeTask(myTasklist);
+          changeTaskStatus(myTasklist);
           break;
         case "Change Sub-Task Status":
-          changeSubTask(myTasklist);
+          changeSubTaskStatus(myTasklist);
           break;
         case "Export Tasklist as Text File":
-          exportAsTxtFile(myTasklist, "myTasklist.txt");
+          exportAsTxtFile(myTasklist);
+          break;
         case "Import Tasklist from Text File":
-          importTxtFile("myTasklist.txt", myTasklist);
+          importTxtFile("exampleTasklist.txt");
+          break;
       }
     });
 }
@@ -186,7 +188,7 @@ function removeSubTask(tasklist) {
   });
 }
 
-function changeTask(tasklist) {
+function changeTaskStatus(tasklist) {
   let changeTaskSelections = generateOptions(tasklist, "display");
 
   inquirer.prompt([
@@ -206,7 +208,7 @@ function changeTask(tasklist) {
   });
 }
 
-function changeSubTask(tasklist) {
+function changeSubTaskStatus(tasklist) {
   let cstFiltered = tasklist.filter(function (obj) {
       return Array.isArray(obj.subTasks);
   });
@@ -247,54 +249,67 @@ function changeSubTask(tasklist) {
   });
 }
 
-function exportAsTxtFile(tasklist, filename) {
-  fs.writeFile(filename, "", "utf8", (err) => {if (err) throw err});
-  fs.writeFile(filename ,
-  "+----------+\n" +
-  "| TASKLIST |\n" +
-  "+----------+\n" +
-  "\n",
-  "utf8", (err) => {if (err) throw err;});
+function exportAsTxtFile(tasklist) {
 
-  let str = '';
-
-
-  for (let i=0; i < tasklist.length; i++) {
-    if (tasklist[i].status) {
-      str += "[X] - " + tasklist[i].message + "\n";
-    } else {
-      str += tasklist[i].display + "\n";
+  inquirer.prompt([
+    {
+      name: "filename",
+      type: "input",
+      message: "Enter filename of export destination (ex. export.txt):"
     }
-    if (Array.isArray(tasklist[i].subTasks)) {
-      for (let j=0; j < tasklist[i].subTasks.length; j++) {
-        if (tasklist[i].subTasks[j].status) {
-          str += "     [X] - " + tasklist[i].subTasks[j].message + "\n";
+  ]).then(function (answer) {
+    let filePath = `./export/${answer.filename}`;
+    let str = '';
+
+    fs.writeFile(filePath, "", "utf8", (err) => {if (err) throw err});
+
+    fs.writeFile(filePath,
+      "+----------+\n" +
+      "| TASKLIST |\n" +
+      "+----------+\n" +
+      "\n",
+      "utf8", (err) => {if (err) throw err;});
+
+      for (let i=0; i < tasklist.length; i++) {
+        if (tasklist[i].status) {
+          str += "[X] - " + tasklist[i].message + "\n";
         } else {
-          str += "     " + tasklist[i].subTasks[j].display + "\n";
+          str += tasklist[i].display + "\n";
+        }
+
+        if (Array.isArray(tasklist[i].subTasks)) {
+          for (let j=0; j < tasklist[i].subTasks.length; j++) {
+            if (tasklist[i].subTasks[j].status) {
+              str += "     [X] - " + tasklist[i].subTasks[j].message + "\n";
+            } else {
+              str += "     " + tasklist[i].subTasks[j].display + "\n";
+            }
+          }
         }
       }
-    }
-  }
 
-  fs.appendFile(filename, str, "utf8", function (err) {
-    if (err) {
-      throw err;
-    } else {
-      console.log(`SUCCESS: Exported File to: ${filename}`);
-    }
+      fs.appendFile(filePath, str, "utf8", function (err) {
+        if (err) {
+          throw err;
+        } else {
+          str = '';
+          console.log(`SUCCESS: Exported File to -> ${answer.filename}\n (Located in export folder)`);
+          promptContinue();
+        }
+      });
   });
-  promptContinue();
+
 }
 
 function importTxtFile(filename) {
   let readFilePromise = importFilePromise(filename);
 
   readFilePromise.then(function (fulfilled) {
-    console.log("SUCESS: Import Text File Successful!");
+    console.log("SUCCESS: Import Text File Successful!");
     myTasklist = fulfilled;
     promptContinue();
   }, function(err) {
-    console.log("Error! Promise returned rejected");
+    console.log("ERROR: Promise returned rejected");
     if (err) throw err;
     promptContinue();
   });
@@ -350,7 +365,7 @@ function importFilePromise(filename) {
       if (taskArray.length > 0) {
         resolve(taskArray);
       } else {
-        reject("Error: Unable to Parse File. Please make sure to\n structure imported tasklist properly.");
+        reject("ERROR: Unable to Parse Text File. Please make sure to\n structure imported tasklist properly.");
       }
     });
 
@@ -380,9 +395,9 @@ function promptContinue() {
     }
   ]).then(function (answers) {
     if (answers.continue) {
-      startApp();
+      runApplication();
     } else {
-      console.log("~~~ Thank you for using Taskmaster! ~~~");
+      console.log("\n~~~ Thank you for using Taskmaster! ~~~");
     }
   });
 }
