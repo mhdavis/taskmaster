@@ -1,9 +1,0 @@
-+----------+
-| TASKLIST |
-+----------+
-
-y Peanut Butter to bread slice
-     [ ] - Apply Jelly to bread slice
-     [ ] - Put Bread slices together
-[X] - Wash the Car
-[ ] - Do the Laundry

@@ -53,7 +53,7 @@ function runApplication() {
           exportAsTxtFile(myTasklist);
           break;
         case "Import Tasklist from Text File":
-          importTxtFile("exampleTasklist.txt");
+          importTxtFile();
           break;
       }
     });
@@ -239,7 +239,6 @@ function changeSubTaskStatus(tasklist) {
           for (let j=0; j < tasklist[i].subTasks.length; j++) {
             if (tasklist[i].subTasks[j].display === inner_answers.subtask_for_status_change) {
               tasklist[i].subTasks[j].toggleStatus();
-              console.log(tasklist[i].subTasks[j].status);
             }
           }
           promptContinue();
@@ -301,30 +300,37 @@ function exportAsTxtFile(tasklist) {
 
 }
 
-function importTxtFile(filename) {
-  let readFilePromise = importFilePromise(filename);
+function importTxtFile() {
+  inquirer.prompt([{
+    name: "filename",
+    type: "input",
+    message: "Enter filename in import folder (ex. imported.txt):"
+  }]).then(function (answers) {
+    let filePath = `./import/${answers.filename}`;
+    let readFilePromise = importFilePromise(filePath);
 
-  readFilePromise.then(function (fulfilled) {
-    console.log("SUCCESS: Import Text File Successful!");
-    myTasklist = fulfilled;
-    promptContinue();
-  }, function(err) {
-    console.log("ERROR: Promise returned rejected");
-    if (err) throw err;
-    promptContinue();
+    readFilePromise.then(function (fulfilled) {
+      console.log("SUCCESS: Import Text File Successful!");
+      myTasklist = fulfilled;
+      promptContinue();
+    }, function(err) {
+      console.log("ERROR: Promise returned rejected");
+      if (err) throw err;
+      promptContinue();
+    });
   });
 
 }
 
 
-function importFilePromise(filename) {
+function importFilePromise(filepath) {
 
   return new Promise (function (resolve, reject) {
 
     let taskArray = [];
 
     const rl = readline.createInterface({
-      input: fs.createReadStream(filename)
+      input: fs.createReadStream(filepath)
     });
 
     rl.on('line', function(line) {
