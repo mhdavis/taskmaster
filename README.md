@@ -37,3 +37,15 @@ to allow the user to go _n_ levels down, allowing for Sub-Tasks to contain
 Sub-Tasks themselves, etc.
 
 **_Sub-Task Completion_** - Currently, When all Sub-Tasks are completed in a Parent Task, the Parent Task will **NOT** be marked as completed. In order to mark a Parent Task as complete, the user must select the `Change Task Status` method.
+
+
+## Available Features
+1. [Display Tasklist](#display-tasklist)
+2. [Add Task](#add-task)
+3. [Remove Task](#remove-task)
+4. [Add Sub-Task](#add-sub-task)
+5. [Remove Sub-Task](#remove-sub-task)
+6. [Change Task Status](#change-task-status)
+7. [Change Sub-Task Status](#change-sub-task-status)
+8. [Export Tasklist as Text File](#export-tasklist)
+9. [Import Tasklist from Text File](#import-tasklist)
