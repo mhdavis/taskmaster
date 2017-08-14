@@ -61,3 +61,6 @@ Selecting `Remove Task` will allow the user to delete a Parent Task from the Tas
 
 #### Add Sub-Task <a name="add-sub-task"></a>
 Selecting `Add Sub-Task` will allow the user to add a Sub-Task to an existing Parent Task.
+
+#### Remove Sub-Task <a name="remove-sub-task"></a>
+Selecting `Remove Sub-Task` will allows the user to remove a Sub-Task from an existing Parent Task **_only_** if it contains a Sub-Task.
