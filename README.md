@@ -66,4 +66,7 @@ Selecting `Add Sub-Task` will allow the user to add a Sub-Task to an existing Pa
 Selecting `Remove Sub-Task` will allows the user to remove a Sub-Task from an existing Parent Task **_only_** if it contains a Sub-Task.
 
 #### Change Task Status <a name="change-task-status"></a>
-Selecting `Change Task Status` will allow the user to toggle a Tasks status from incomplete `[ ]` to complete `[X]` and vice versa.
+Selecting `Change Task Status` will allow the user to toggle a Task's status from incomplete `[ ]` to complete `[X]` and vice versa.
+
+#### Change Sub-Task Status <a name="change-sub-task-status"></a>
+Selecting `Change Sub-Task Status` will allow the user to toggle a Sub-Task's status from incomplete `[ ]` to complete `[X]` and vice versa. Only Tasks which contain Sub-Tasks are displayed to the user.
