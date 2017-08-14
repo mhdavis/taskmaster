@@ -51,4 +51,10 @@ Sub-Tasks themselves, etc.
 - [Import Tasklist from Text File](#import-tasklist)
 
 ### Display Tasklist <a name="display-tasklist"></a>
-Selecting `Display Tasklist` will display an empty tasklist until the user has populated the tasklist with tasks.
+Selecting `Display Tasklist` will display an empty Tasklist until the user has populated the Tasklist with tasks.
+
+### Add Task <a name="add-task"></a>
+Selecting `Add Task` will allow the user to add a new Parent Task to the Tasklist.
+
+### Remove Task <a name="remove-task"></a>
+Selecting `Remove Task` will allow the user to delete 
