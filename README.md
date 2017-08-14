@@ -57,4 +57,4 @@ Selecting `Display Tasklist` will display an empty Tasklist until the user has p
 Selecting `Add Task` will allow the user to add a new Parent Task to the Tasklist.
 
 ### Remove Task <a name="remove-task"></a>
-Selecting `Remove Task` will allow the user to delete 
+Selecting `Remove Task` will allow the user to delete a Parent Task from the Tasklist. If a Parent Task contains Sub-Tasks, the Sub-Tasks corresponding to the Parent Task will be deleted as well.
