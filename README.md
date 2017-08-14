@@ -40,12 +40,15 @@ Sub-Tasks themselves, etc.
 
 
 ## Available Features
-1. [Display Tasklist](#display-tasklist)
-2. [Add Task](#add-task)
-3. [Remove Task](#remove-task)
-4. [Add Sub-Task](#add-sub-task)
-5. [Remove Sub-Task](#remove-sub-task)
-6. [Change Task Status](#change-task-status)
-7. [Change Sub-Task Status](#change-sub-task-status)
-8. [Export Tasklist as Text File](#export-tasklist)
-9. [Import Tasklist from Text File](#import-tasklist)
+- [Display Tasklist](#display-tasklist)
+- [Add Task](#add-task)
+- [Remove Task](#remove-task)
+- [Add Sub-Task](#add-sub-task)
+- [Remove Sub-Task](#remove-sub-task)
+- [Change Task Status](#change-task-status)
+- [Change Sub-Task Status](#change-sub-task-status)
+- [Export Tasklist as Text File](#export-tasklist)
+- [Import Tasklist from Text File](#import-tasklist)
+
+### Display Tasklist <a name="display-tasklist"></a>
+Selecting `Display Tasklist` will display an empty tasklist until the user has populated the tasklist with tasks.
