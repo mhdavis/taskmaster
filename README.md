@@ -70,3 +70,6 @@ Selecting `Change Task Status` will allow the user to toggle a Task's status fro
 
 #### Change Sub-Task Status <a name="change-sub-task-status"></a>
 Selecting `Change Sub-Task Status` will allow the user to toggle a Sub-Task's status from incomplete `[ ]` to complete `[X]` and vice versa. Only Tasks which contain Sub-Tasks are displayed to the user.
+
+#### Export Tasklist to Text File <a name="export-tasklist"></a>
+Selecting `Export Tasklist as Text File` will allow the user to export their current Taskmaster Tasklist to a Text File (specified by the user as an input) located in the `/export` folder.
