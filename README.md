@@ -3,7 +3,12 @@
 ## Introduction
 Taskmaster is a simple tasklist creation / maintenance application that runs in the terminal and allows the user to generate, modify, import and export tasklist
 
-## Tasklist Structure
+## Table of Contents
+- [Tasklist Structure](#tasklist-structure)
+- [Available Features](#available-features)
+- [Future Improvements](#future-improvements)
+
+## Tasklist Structure <a name="tasklist-structure"></a>
 An example Tasklist is provided Here:
 
 ```
@@ -30,16 +35,7 @@ complete `[X]` (This is default behavior).
 **Sub-Task (or Child Task)** - Sub-Tasks are stepping stones and required to
 be completed in order to complete the Parent Task.
 
-**Future Improvements:**
-
-**_Sub-Task Levels_** - In this current time, Children tasks may only exist one level down from their parent tasks. Future versions Taskmaster are being worked on in order
-to allow the user to go _n_ levels down, allowing for Sub-Tasks to contain
-Sub-Tasks themselves, etc.
-
-**_Sub-Task Completion_** - Currently, When all Sub-Tasks are completed in a Parent Task, the Parent Task will **NOT** be marked as completed. In order to mark a Parent Task as complete, the user must select the `Change Task Status` method.
-
-
-## Available Features
+## Available Features <a name="available-features"></a>
 - [Display Tasklist](#display-tasklist)
 - [Add Task](#add-task)
 - [Remove Task](#remove-task)
@@ -75,4 +71,12 @@ Selecting `Change Sub-Task Status` will allow the user to toggle a Sub-Task's st
 Selecting `Export Tasklist as Text File` will allow the user to export their current Taskmaster Tasklist to a Text File (specified by the user as an input) located in the `/export` folder.
 
 #### Import Tasklist from Text File <a name="import-tasklist"></a>
-Selecting `Import Tasklist as Text File` will allow the user to import a Tasklist to Taskmaster from the `/import` folder. 
+Selecting `Import Tasklist as Text File` will allow the user to import a Tasklist to Taskmaster from the `/import` folder.
+
+## Future Improvements <a name="future-improvements"></a>
+
+**_Sub-Task Levels_** - In this current time, Children tasks may only exist one level down from their parent tasks. Future versions Taskmaster are being worked on in order
+to allow the user to go _n_ levels down, allowing for Sub-Tasks to contain
+Sub-Tasks themselves, etc.
+
+**_Sub-Task Completion_** - Currently, When all Sub-Tasks are completed in a Parent Task, the Parent Task will **NOT** be marked as completed. In order to mark a Parent Task as complete, the user must select the `Change Task Status` method.
