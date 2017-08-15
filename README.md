@@ -73,3 +73,6 @@ Selecting `Change Sub-Task Status` will allow the user to toggle a Sub-Task's st
 
 #### Export Tasklist to Text File <a name="export-tasklist"></a>
 Selecting `Export Tasklist as Text File` will allow the user to export their current Taskmaster Tasklist to a Text File (specified by the user as an input) located in the `/export` folder.
+
+#### Import Tasklist from Text File <a name="import-tasklist"></a>
+Selecting `Import Tasklist as Text File` will allow the user to import a Tasklist to Taskmaster from the `/import` folder. 
